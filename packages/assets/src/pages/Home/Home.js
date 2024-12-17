@@ -1,87 +1,205 @@
 import React, {useState} from 'react';
-import {
-  Page,
-  Layout,
-  Card,
-  FormLayout,
-  TextField,
-  Button,
-  LegacyCard,
-  Icon
-} from '@shopify/polaris';
+import {Page, Layout, LegacyCard, FormLayout, TextField, Button, Icon} from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
 
 // Dummy data for preview (replace with actual media later)
 const dummyMedia = [
-  {id: 1, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 1'},
-  {id: 2, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 2'},
-  {id: 3, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 3'},
-  {id: 4, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 4'},
-  {id: 5, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 5'},
-  {id: 6, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 6'},
-  {id: 7, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 7'},
-  {id: 8, imageUrl: 'https://via.placeholder.com/150', caption: 'Image 8'}
+  {
+    id: 1,
+    imageUrl:
+      'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTljZGdkbWFsZ2FoMml6aHQxejA4dDZ5eW1xMWlxaDJxcnNzeWg2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WTL02R1L7YCGUEunFy/giphy.webp'
+  },
+  {
+    id: 2,
+    imageUrl:
+      'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXcxY2I1OXA3dG5mZGliNHpyNTF3cDE1N3Zvam5yNXF3MWVnZm50biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vBTxCPUwfC6ddBsTbs/giphy.webp'
+  },
+  {
+    id: 3,
+    imageUrl:
+      'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMThma2hscXVxMDljeHRxNXdzNjljcTJ4eTh1NjFlcTF3aG5lbWd4diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tHIRLHtNwxpjIFqPdV/giphy.webp'
+  },
+  {
+    id: 4,
+    imageUrl:
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  },
+  {
+    id: 5,
+    imageUrl:
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  },
+  {
+    id: 6,
+    imageUrl:
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  },
+  {
+    id: 7,
+    imageUrl:
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  },
+  {
+    id: 8,
+    imageUrl:
+      'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  }
 ];
 
 const Home = () => {
   const [feedTitle, setFeedTitle] = useState('');
   const [postSpacing, setPostSpacing] = useState(10);
   const [rows, setRows] = useState(2);
-  const [columns, setColumns] = useState(4);
-  const [layout, setLayout] = useState(4); // Default layout
+  const [columns, setColumns] = useState(3);
+  const [layout, setLayout] = useState(1); // Default layout
 
   const handleSaveFeed = () => {
     // Handle saving feed configuration
   };
 
-  // Generate grid styles based on rows, columns, spacing, and layout
+  const handleInputChange = (setter, min, max) => value => {
+    const numericValue = Math.max(min, Math.min(Number(value), max));
+    setter(numericValue);
+  };
+
+  // Grid Layout Style
   const gridStyle = {
     display: 'grid',
-    gridTemplateColumns:
-      layout === 1 ? '1fr' : layout === 2 ? 'repeat(2, 1fr)' : `repeat(${columns}, 1fr)`, // Layout: 1 => 1 column, 2 => 2 columns, else use columns
-    gap: `${postSpacing}px`, // Set gap between items
+    gridTemplateColumns: `repeat(${columns}, 1fr)`,
+    gap: `${postSpacing}px`,
+    marginTop: '0px'
+  };
+
+  // Highlight Layout Style
+  const highlightStyle = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 1fr 1fr',
+    gridTemplateRows: 'auto auto',
+    gap: `${postSpacing}px`,
     marginTop: '20px'
   };
 
-  // Adjust grid based on row and layout configuration
-  const rowStyle = {
-    gridTemplateRows: `repeat(${rows}, auto)` // Set number of rows dynamically
-  };
+  const renderGridLayout = () => (
+    <div style={gridStyle}>
+      {dummyMedia.slice(0, rows * columns).map(media => (
+        <div key={media.id} style={{position: 'relative'}}>
+          <img
+            src={media.imageUrl}
+            alt={media.caption}
+            style={{
+              width: '100%',
+              height: 'auto',
+              borderRadius: '8px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              color: 'white',
+              fontSize: '12px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              padding: '2px 5px',
+              borderRadius: '4px'
+            }}
+          >
+            {media.caption}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderHighlightLayout = () => (
+    <div style={highlightStyle}>
+      {dummyMedia.slice(0, 5).map((media, index) => (
+        <div
+          key={media.id}
+          style={{
+            position: 'relative',
+            gridColumn: index === 0 ? 'span 2' : 'span 1',
+            gridRow: index === 0 ? 'span 2' : 'span 1'
+          }}
+        >
+          <img
+            src={media.imageUrl}
+            alt={media.caption}
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '8px',
+              objectFit: 'cover',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '10px',
+              left: '10px',
+              color: 'white',
+              fontSize: '12px',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              padding: '2px 5px',
+              borderRadius: '4px'
+            }}
+          >
+            {media.caption}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <Page fullWidth title="Instagram Feed App">
       <Layout>
-        <Layout.Section variant={'oneHalf'}>
+        <Layout.Section variant="oneHalf">
           <LegacyCard sectioned>
-            <Button variant={'primary'} icon={<Icon source={LogoInstagramIcon} />}>
+            <Button variant="primary" icon={<Icon source={LogoInstagramIcon} />}>
               Connect with Instagram
             </Button>
           </LegacyCard>
           <LegacyCard title="Feed Configuration" sectioned>
             <FormLayout>
-              <TextField
-                label="Feed Title"
-                type={'text'}
-                value={feedTitle}
-                onChange={setFeedTitle}
-              />
+              <TextField label="Feed Title" value={feedTitle} onChange={setFeedTitle} />
               <TextField
                 label="Post Spacing"
-                type={'number'}
+                type="number"
                 value={postSpacing}
-                onChange={setPostSpacing}
+                onChange={handleInputChange(setPostSpacing, 1, 15)}
+                min={1}
+                max={15}
               />
-              <TextField label="Layout" type="number" value={layout} onChange={setLayout} />
+              <TextField
+                label="Layout (1: Grid, 2: Highlight)"
+                type="number"
+                value={layout}
+                onChange={handleInputChange(setLayout, 1, 2)}
+                min={1}
+                max={2}
+              />
               <FormLayout.Group>
-                <TextField label="Number of Rows" type="number" value={rows} onChange={setRows} />
+                <TextField
+                  label="Number of Rows"
+                  type="number"
+                  value={rows}
+                  onChange={handleInputChange(setRows, 1, 12)}
+                  min={1}
+                  max={12}
+                />
                 <TextField
                   label="Number of Columns"
                   type="number"
                   value={columns}
-                  onChange={setColumns}
+                  onChange={handleInputChange(setColumns, 1, 3)}
+                  min={1}
+                  max={3}
                 />
               </FormLayout.Group>
-              <Button fullWidth variant={'primary'} onClick={handleSaveFeed}>
+              <Button fullWidth variant="primary" onClick={handleSaveFeed}>
                 Save Feed
               </Button>
             </FormLayout>
@@ -90,36 +208,7 @@ const Home = () => {
 
         <Layout.Section>
           <LegacyCard title="Preview" sectioned>
-            <div style={{...gridStyle, ...rowStyle}}>
-              {dummyMedia.slice(0, rows * columns).map(media => (
-                <div key={media.id} style={{position: 'relative'}}>
-                  <img
-                    src={media.imageUrl}
-                    alt={media.caption}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      borderRadius: '8px',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '10px',
-                      left: '10px',
-                      color: 'white',
-                      fontSize: '12px',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      padding: '2px 5px',
-                      borderRadius: '4px'
-                    }}
-                  >
-                    {media.caption}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {layout === 2 ? renderHighlightLayout() : renderGridLayout()}
           </LegacyCard>
         </Layout.Section>
       </Layout>

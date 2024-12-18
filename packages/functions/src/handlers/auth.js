@@ -7,6 +7,7 @@ import path from 'path';
 import createErrorHandler from '@functions/middleware/errorHandler';
 import firebase from 'firebase-admin';
 import appConfig from '@functions/config/app';
+import {getShopByShopifyDomain} from '@avada/shopify-auth';
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp();
@@ -29,6 +30,7 @@ app.use(contentSecurityPolicy(true));
 // Register all routes for the application
 app.use(
   shopifyAuth({
+    // accessTokenKey: shopifyConfig.accessTokenKey,
     apiKey: shopifyConfig.apiKey,
     firebaseApiKey: shopifyConfig.firebaseApiKey,
     scopes: shopifyConfig.scopes,
@@ -40,6 +42,21 @@ app.use(
       price: 0,
       trialDays: 0,
       features: {}
+    },
+    afterLogin: async ctx => {
+      try {
+        // const shopifyDomain = ctx.state.shopify.shop;
+        // const shop = await getShopByShopifyDomain(shopifyDomain);
+        console.log('After login:');
+        const {shop: shopDomain} = ctx.state.shopify;
+        console.log('shopDomain:', shopDomain);
+        const shop = await getShopByShopifyDomain(shopDomain);
+        console.log('shop:', shop);
+
+        // await scriptTagCreate({shopName: shopDomain, accessToken: shop.accessToken});
+      } catch (err) {
+        console.log(err);
+      }
     },
     hostName: appConfig.baseUrl,
     isEmbeddedApp: true,

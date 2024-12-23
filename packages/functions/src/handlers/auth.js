@@ -1,3 +1,4 @@
+// packages/functions/src/handlers/auth.js
 import App from 'koa';
 import 'isomorphic-fetch';
 import {contentSecurityPolicy, shopifyAuth} from '@avada/core';
@@ -8,6 +9,9 @@ import createErrorHandler from '@functions/middleware/errorHandler';
 import firebase from 'firebase-admin';
 import appConfig from '@functions/config/app';
 import {getShopByShopifyDomain} from '@avada/shopify-auth';
+import {addFeedConfig, getFeedConfigByShopDomain} from '@functions/repositories/instagramRepository';
+import defaultFeedConfig from '@functions/const/defaultFeedConfig';
+import {scriptTagCreate} from '@functions/services/scriptTagService';
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp();
@@ -43,6 +47,29 @@ app.use(
       trialDays: 0,
       features: {}
     },
+    hostName: appConfig.baseUrl,
+    isEmbeddedApp: true,
+    afterInstall: async ctx => {
+      try {
+        // const shopifyDomain = ctx.state.shopify.shop;
+        // const shop = await getShopByShopifyDomain(shopifyDomain);
+        console.log('After install:');
+        const {shop: shopDomain} = ctx.state.shopify;
+        console.log('shopDomain:', shopDomain);
+        const shop = await getShopByShopifyDomain(shopDomain);
+        console.log('shop:', shop);
+
+        await Promise.all([
+          addFeedConfig({shopDomain: shopDomain, shopId: shop.id, addInfo: defaultFeedConfig})
+        ]);
+
+        const savedConfig = await getFeedConfigByShopDomain(shopDomain);
+        console.log('Saved feed config:', savedConfig);
+
+      } catch (err) {
+        console.log(err);
+      }
+    },
     afterLogin: async ctx => {
       try {
         // const shopifyDomain = ctx.state.shopify.shop;
@@ -53,13 +80,11 @@ app.use(
         const shop = await getShopByShopifyDomain(shopDomain);
         console.log('shop:', shop);
 
-        // await scriptTagCreate({shopName: shopDomain, accessToken: shop.accessToken});
+        await scriptTagCreate({shopName: shopDomain, accessToken: shop.accessToken});
       } catch (err) {
         console.log(err);
       }
     },
-    hostName: appConfig.baseUrl,
-    isEmbeddedApp: true,
     afterThemePublish: ctx => {
       // Publish assets when theme is published or changed here
       return (ctx.body = {

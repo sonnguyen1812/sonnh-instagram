@@ -1,0 +1,21 @@
+// src/components/InstagramFeed/InstagramFeed.scss
+.instagram-feed {
+  &__wrapper {
+    margin: 20px 0;
+  }
+
+  &__item {
+    &:hover {
+      .overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  .overlay {
+    .time {
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+}

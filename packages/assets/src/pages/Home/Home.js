@@ -1,136 +1,226 @@
-// pages/Home/Home.js
+// packages/assets/src/pages/Home/Home.js
 import React, {useState} from 'react';
-import {Page, Layout, LegacyCard, FormLayout, TextField, Button, Icon} from '@shopify/polaris';
+import {
+  Frame,
+  Page,
+  Layout,
+  LegacyCard,
+  FormLayout,
+  TextField,
+  Button,
+  Icon,
+  SkeletonBodyText,
+  SkeletonDisplayText,
+  TextContainer
+} from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
 import InstagramFeed from '../../components/InstagramFeed/InstagramFeed';
+import useActiveToast from '@assets/hooks/toast/useActiveToast';
+import useModal from '@assets/hooks/popup/useModal';
+import useGetApi from '@assets/hooks/api/useGetApi';
+import {api} from '@assets/helpers';
+import defaultFeedConfig from '@functions/const/defaultFeedConfig';
+import dummyMedia from '@assets/const/dummyMedia';
 
-const Home = () => {
-  const [config, setConfig] = useState({
-    title: '',
-    layout: 1,
-    columns: 3,
-    rows: 2,
-    spacing: 10
+export default function Home() {
+  const {toastMarkup, handleActiveToastChange} = useActiveToast(false, '');
+  const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  // Get feed config từ API sử dụng useGetApi hook
+  const {data: feedConfig, setData: setFeedConfig, fetched, setFetched} = useGetApi({
+    url: '/instagram/feed',
+    defaultData: defaultFeedConfig,
+    onSuccess: () => {
+      setIsInitialLoading(false);
+    }
   });
 
-  const dummyMedia = [
-    {
-      id: 1,
-      imageUrl:
-        'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTljZGdkbWFsZ2FoMml6aHQxejA4dDZ5eW1xMWlxaDJxcnNzeWg2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WTL02R1L7YCGUEunFy/giphy.webp'
-    },
-    {
-      id: 2,
-      imageUrl:
-        'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbXcxY2I1OXA3dG5mZGliNHpyNTF3cDE1N3Zvam5yNXF3MWVnZm50biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vBTxCPUwfC6ddBsTbs/giphy.webp'
-    },
-    {
-      id: 3,
-      imageUrl:
-        'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMThma2hscXVxMDljeHRxNXdzNjljcTJ4eTh1NjFlcTF3aG5lbWd4diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/tHIRLHtNwxpjIFqPdV/giphy.webp'
-    },
-    {
-      id: 4,
-      imageUrl:
-        'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
-    },
-    {
-      id: 5,
-      imageUrl:
-        'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
-    },
-    {
-      id: 6,
-      imageUrl:
-        'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
-    },
-    {
-      id: 7,
-      imageUrl:
-        'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
-    },
-    {
-      id: 8,
-      imageUrl:
-        'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWtnM2hrbHNvZjRvNDB4NHJtMmtzcWs2bTRzZWMzdTYyZzJjbXBsaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/unQ3IJU2RG7DO/giphy.webp'
+  // Handle save feed config
+  const handleSaveFeed = async () => {
+    try {
+      if (fetched) {
+        handleActiveToastChange('Your feed settings have not changed');
+        closeModal();
+        return;
+      }
+
+      setLoading(true);
+      const res = await api('/instagram/feed', {
+        method: 'PUT',
+        body: {data: feedConfig}
+      });
+
+      if (res && res.data) {
+        setFeedConfig(prevConfig => ({
+          ...prevConfig,
+          ...res.data
+        }));
+
+        setFetched(true);
+        closeModal();
+        handleActiveToastChange('Save successfully');
+      }
+    } catch (err) {
+      console.error('Save feed settings error:', err);
+      handleActiveToastChange('Save failed');
+    } finally {
+      setLoading(false);
     }
-  ];
-
-  const handleInputChange = (field, min, max) => value => {
-    const numericValue = Math.max(min, Math.min(Number(value), max));
-    setConfig(prev => ({
-      ...prev,
-      [field]: numericValue
-    }));
   };
 
-  const handleTitleChange = value => {
-    setConfig(prev => ({
-      ...prev,
-      title: value
-    }));
+  // Modal confirm save
+  const {modal, openModal, closeModal} = useModal({
+    title: 'Save change',
+    content: 'Do you want to update your feed settings?',
+    confirmAction: handleSaveFeed,
+    primaryAction: {
+      content: 'Save',
+      loading: loading,
+      onAction: handleSaveFeed
+    }
+  });
+
+  const handleFeedConfigChange = (key, value) => {
+    setFetched(false);
+    setFeedConfig(prevConfig => {
+      const newConfig = {
+        ...prevConfig,
+        [key]: value
+      };
+      console.log('Feed config after change:', newConfig);
+      return newConfig;
+    });
   };
 
-  return (
-    <Page fullWidth title="Instagram Feed App">
+  // Loading skeleton component
+  const SkeletonContent = () => {
+    return (
       <Layout>
         <Layout.Section variant={'oneHalf'}>
           <LegacyCard sectioned>
-            <Button variant="primary" icon={<Icon source={LogoInstagramIcon} />}>
-              Connect with Instagram
-            </Button>
-          </LegacyCard>
-
-          <LegacyCard sectioned>
-            <FormLayout>
-              <TextField label="Feed Title" value={config.title} onChange={handleTitleChange} />
-              <TextField
-                label="Post Spacing"
-                type="number"
-                value={config.spacing}
-                onChange={handleInputChange('spacing', 1, 15)}
-                min={1}
-                max={15}
-              />
-              <TextField
-                label="Layout (1: Grid, 2: Highlight)"
-                type="number"
-                value={config.layout}
-                onChange={handleInputChange('layout', 1, 2)}
-                min={1}
-                max={2}
-              />
-              <FormLayout.Group>
-                <TextField
-                  label="Number of Rows"
-                  type="number"
-                  value={config.rows}
-                  onChange={handleInputChange('rows', 1, 12)}
-                  min={1}
-                  max={12}
-                />
-                <TextField
-                  label="Number of Columns"
-                  type="number"
-                  value={config.columns}
-                  onChange={handleInputChange('columns', 1, 3)}
-                  min={1}
-                  max={3}
-                />
-              </FormLayout.Group>
-              <Button fullWidth variant="primary">
-                Save Feed
-              </Button>
-            </FormLayout>
+            <TextContainer>
+              <SkeletonDisplayText size="small" />
+              <SkeletonBodyText />
+            </TextContainer>
           </LegacyCard>
         </Layout.Section>
-
         <Layout.Section>
-          <InstagramFeed media={dummyMedia} config={config} preview={true} />
+          <LegacyCard>
+            <LegacyCard.Section>
+              <TextContainer>
+                <SkeletonDisplayText size="small" />
+              </TextContainer>
+            </LegacyCard.Section>
+            <LegacyCard.Section>
+              <SkeletonBodyText lines={3} />
+            </LegacyCard.Section>
+            <LegacyCard.Section>
+              <SkeletonBodyText lines={3} />
+            </LegacyCard.Section>
+          </LegacyCard>
         </Layout.Section>
       </Layout>
-    </Page>
-  );
-};
+    );
+  };
 
-export default Home;
+  if (isInitialLoading) {
+    return (
+      <Frame>
+        <Page fullWidth title="Instagram Feed App">
+          <SkeletonContent />
+        </Page>
+      </Frame>
+    );
+  }
+
+  return (
+    <div style={{marginBottom: '50px'}}>
+      <Frame>
+        <Page
+          fullWidth
+          title="Instagram Feed App"
+          subtitle="Configure how your Instagram feed will display"
+        >
+          <Layout>
+            <Layout.Section variant={'oneHalf'}>
+              <LegacyCard sectioned>
+                <Button variant="primary" icon={<Icon source={LogoInstagramIcon} />}>
+                  Connect with Instagram
+                </Button>
+              </LegacyCard>
+
+              <LegacyCard sectioned title="FEED CONFIGURATION">
+                <FormLayout>
+                  <TextField
+                    label="Feed Title"
+                    value={feedConfig.title}
+                    onChange={value => handleFeedConfigChange('title', value)}
+                  />
+                  <TextField
+                    label="Post Spacing"
+                    type="number"
+                    value={feedConfig.spacing}
+                    onChange={value =>
+                      handleFeedConfigChange('spacing', Math.min(Math.max(Number(value), 1), 15))
+                    }
+                    min={1}
+                    max={15}
+                  />
+                  <TextField
+                    label="Layout (1: Grid, 2: Highlight)"
+                    type="number"
+                    value={feedConfig.layout}
+                    onChange={value =>
+                      handleFeedConfigChange('layout', Math.min(Math.max(Number(value), 1), 2))
+                    }
+                    min={1}
+                    max={2}
+                  />
+                  <FormLayout.Group>
+                    <TextField
+                      label="Number of Rows"
+                      type="number"
+                      value={feedConfig.rows}
+                      onChange={value =>
+                        handleFeedConfigChange('rows', Math.min(Math.max(Number(value), 1), 12))
+                      }
+                      min={1}
+                      max={12}
+                    />
+                    <TextField
+                      label="Number of Columns"
+                      type="number"
+                      value={feedConfig.columns}
+                      onChange={value =>
+                        handleFeedConfigChange('columns', Math.min(Math.max(Number(value), 1), 3))
+                      }
+                      min={1}
+                      max={3}
+                    />
+                  </FormLayout.Group>
+                  <Button
+                    fullWidth
+                    variant="primary"
+                    loading={loading}
+                    onClick={() => openModal()}
+                  >
+                    Save Feed
+                  </Button>
+                </FormLayout>
+              </LegacyCard>
+            </Layout.Section>
+
+            <Layout.Section>
+              <div className="feed-preview">
+                <InstagramFeed media={dummyMedia} config={feedConfig} preview={true} />
+              </div>
+            </Layout.Section>
+          </Layout>
+          {toastMarkup}
+        </Page>
+        {modal}
+      </Frame>
+    </div>
+  );
+}

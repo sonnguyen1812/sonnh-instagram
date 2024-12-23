@@ -1,8 +1,11 @@
-import Router from 'koa-router';
 import * as sampleController from '@functions/controllers/sampleController';
 import * as shopController from '@functions/controllers/shopController';
 import * as subscriptionController from '@functions/controllers/subscriptionController';
 import * as appNewsController from '@functions/controllers/appNewsController';
+
+import {getFeed, updateFeed} from '@functions/controllers/instagramController';
+
+import Router from 'koa-router';
 import {getApiPrefix} from '@functions/const/app';
 
 export default function apiRouter(isEmbed = false) {
@@ -12,6 +15,10 @@ export default function apiRouter(isEmbed = false) {
   router.get('/shops', shopController.getUserShops);
   router.get('/subscription', subscriptionController.getSubscription);
   router.get('/appNews', appNewsController.getList);
+
+  // feed config
+  router.get('/instagram/feed', getFeed);
+  router.put('/instagram/feed', updateFeed);
 
   return router;
 }

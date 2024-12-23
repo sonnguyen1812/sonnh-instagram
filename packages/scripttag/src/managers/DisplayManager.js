@@ -1,4 +1,4 @@
-// src/managers/DisplayManager.js
+// packages/scripttag/src/managers/DisplayManager.js
 import InstagramFeed from '../components/InstagramFeed/InstagramFeed';
 import React from 'react';
 import {render} from 'preact';
@@ -32,12 +32,7 @@ export default class DisplayManager {
 
   display({feedConfig, media}) {
     const container = document.querySelector('#avada-instagram-feed');
-    render(
-      <div className="scripttag">
-        <InstagramFeed config={feedConfig} media={media} preview={false} />
-      </div>,
-      container
-    );
+    render(<InstagramFeed config={feedConfig} media={media} preview={false} />, container);
   }
 
   insertContainer() {

@@ -7,7 +7,6 @@ import path from 'path';
 import {verifyEmbedRequest} from '@avada/core';
 import shopifyConfig from '@functions/config/shopify';
 import appConfig from '@functions/config/app';
-import cors from '@koa/cors';
 
 // Initialize all demand configuration for an application
 const api = new App();
@@ -18,8 +17,8 @@ const verifyEmbedConfig = {
   scopes: shopifyConfig.scopes,
   secret: shopifyConfig.secret,
   hostName: appConfig.baseUrl,
-  isEmbeddedApp: true,
-  accessTokenKey: shopifyConfig.accessTokenKey
+  isEmbeddedApp: true
+  // accessTokenKey: shopifyConfig.accessTokenKey
 };
 render(api, {
   cache: true,
@@ -32,15 +31,6 @@ api.use(createErrorHandler());
 api.use(verifyEmbedRequest(verifyEmbedConfig));
 
 const router = apiRouter(true);
-
-api.use(
-  cors({
-    origin: '*',
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization']
-  })
-);
-
 // Register all routes for the application
 api.use(router.allowedMethods());
 api.use(router.routes());

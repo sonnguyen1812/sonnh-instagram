@@ -8,14 +8,7 @@ const api = new App();
 
 api.proxy = true;
 
-api.use(
-  cors({
-    origin: '*',
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowHeaders: ['Content-Type', 'Authorization']
-  })
-);
-
+api.use(cors());
 api.use(router.allowedMethods());
 api.use(router.routes());
 

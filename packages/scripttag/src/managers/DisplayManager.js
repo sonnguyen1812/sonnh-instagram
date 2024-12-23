@@ -2,6 +2,7 @@
 import InstagramFeed from '../components/InstagramFeed/InstagramFeed';
 import React from 'react';
 import {render} from 'preact';
+import {insertAfter} from '../helpers/insertHelpers';
 
 export default class DisplayManager {
   constructor() {
@@ -13,7 +14,9 @@ export default class DisplayManager {
   async initialize({feedConfig, media}) {
     this.feedConfig = feedConfig;
     this.media = media;
+    console.log('Initializing DisplayManager...', feedConfig, media);
     const container = this.insertContainer();
+    console.log('Container:', container);
 
     if (!container) {
       console.error('Failed to create container');
@@ -31,18 +34,23 @@ export default class DisplayManager {
   }
 
   display({feedConfig, media}) {
-    const container = document.querySelector('#avada-instagram-feed');
-    render(<InstagramFeed config={feedConfig} media={media} preview={false} />, container);
+    const container = this.insertContainer();
+    console.log('render');
+    if (container) {
+      render(
+        <InstagramFeed config={feedConfig} media={media} preview={false} />,
+        document.getElementById('instagram-feed-container')
+      );
+    } else {
+      console.error('Instagram Feed container not found');
+    }
   }
 
   insertContainer() {
     const feedEl = document.createElement('div');
-    feedEl.id = 'avada-instagram-feed';
-    feedEl.classList.add('avada-instagram-feed__wrapper');
-
     const targetEl = document.querySelector('body').firstChild;
     if (targetEl) {
-      targetEl.parentNode.insertBefore(feedEl, targetEl);
+      insertAfter(feedEl, targetEl);
     }
 
     return feedEl;

@@ -80,7 +80,7 @@ app.use(
         const shop = await getShopByShopifyDomain(shopDomain);
         console.log('shop:', shop);
 
-        await scriptTagCreate({shopName: shopDomain, accessToken: shop.accessToken});
+        // await scriptTagCreate({shopName: shopDomain, accessToken: shop.accessToken});
       } catch (err) {
         console.log(err);
       }

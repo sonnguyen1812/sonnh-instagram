@@ -1,5 +1,5 @@
 // packages/assets/src/components/InstagramFeed/InstagramFeed.js
-import React, {memo} from 'react';
+import React, {memo, useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {LegacyCard, SkeletonDisplayText, Spinner} from '@shopify/polaris';
 
@@ -9,39 +9,67 @@ const LAYOUT_TYPES = {
 };
 
 const MediaItem = memo(({item, index, config}) => {
+  const imageRef = useRef(null);
   const isHighlight = config.layout === LAYOUT_TYPES.HIGHLIGHT && index === 0;
+
+  useEffect(() => {
+    if (imageRef.current) {
+      const img = new Image();
+      img.src = item.imageUrl;
+      img.onload = () => {
+        if (imageRef.current) {
+          imageRef.current.src = item.imageUrl;
+        }
+      };
+    }
+  }, [item.imageUrl]);
 
   return (
     <div
+      className={`instagram-feed__item ${isHighlight ? 'instagram-feed__item--highlight' : ''}`}
       style={{
         position: 'relative',
-        cursor: 'pointer',
-        paddingBottom: '100%',
-        ...(isHighlight && {
-          gridColumn: 'span 2',
-          gridRow: 'span 2'
-        })
+        width: '100%',
+        aspectRatio: '1 / 1',
+        overflow: 'hidden'
       }}
-      className="instagram-feed__item"
     >
+      <div
+        className="instagram-feed__placeholder"
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: '#f6f6f6',
+          position: 'absolute'
+        }}
+      />
+
       <img
-        src={item.imageUrl}
+        ref={imageRef}
         alt={item.caption || ''}
+        className="instagram-feed__image"
+        width="100%"
+        height="100%"
+        loading="lazy"
+        decoding="async"
+        fetchpriority={index < 4 ? 'high' : 'low'}
         style={{
           position: 'absolute',
+          top: 0,
+          left: 0,
           width: '100%',
-          height: isHighlight ? '100%' : 'auto',
+          height: '100%',
           objectFit: isHighlight ? 'cover' : 'contain',
           borderRadius: '8px'
         }}
-        loading="lazy" // Lazy load images
         onError={e => {
-          e.target.src = 'fallback-image.jpg'; // Fallback image if load fails
+          e.target.src = 'fallback-image.jpg';
           console.error(`Failed to load image: ${item.imageUrl}`);
         }}
       />
+
       <div
-        className="overlay"
+        className="instagram-feed__overlay"
         style={{
           position: 'absolute',
           bottom: 0,
@@ -51,7 +79,8 @@ const MediaItem = memo(({item, index, config}) => {
           color: 'white',
           padding: '12px',
           opacity: 0,
-          transition: 'opacity 0.2s'
+          transition: 'opacity 0.2s',
+          transform: 'translateZ(0)'
         }}
       >
         <p className="time">{item.timestamp}</p>
@@ -61,7 +90,17 @@ const MediaItem = memo(({item, index, config}) => {
 });
 
 const LoadingState = memo(() => (
-  <div style={{padding: '20px', textAlign: 'center'}}>
+  <div
+    className="instagram-feed__loading"
+    style={{
+      padding: '20px',
+      textAlign: 'center',
+      minHeight: '200px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
     <Spinner size="large" />
     <SkeletonDisplayText size="small" />
   </div>
@@ -69,10 +108,12 @@ const LoadingState = memo(() => (
 
 const ErrorState = memo(({error}) => (
   <div
+    className="instagram-feed__error"
     style={{
       padding: '20px',
       textAlign: 'center',
-      color: 'var(--p-text-critical)'
+      color: 'var(--p-text-critical)',
+      minHeight: '100px'
     }}
   >
     <p>Failed to load Instagram feed: {error}</p>
@@ -92,11 +133,15 @@ const InstagramFeed = ({
   loading = false,
   error = null
 }) => {
+  const containerRef = useRef(null);
+
   const gridStyle = React.useMemo(
     () => ({
       display: 'grid',
       gridTemplateColumns: `repeat(${config.columns}, 1fr)`,
-      gap: `${config.spacing}px`
+      gap: `${config.spacing}px`,
+      minHeight: '200px',
+      contain: 'content'
     }),
     [config.columns, config.spacing]
   );
@@ -106,7 +151,9 @@ const InstagramFeed = ({
       display: 'grid',
       gridTemplateColumns: '2fr 1fr 1fr',
       gridTemplateRows: 'auto auto',
-      gap: `${config.spacing}px`
+      gap: `${config.spacing}px`,
+      minHeight: '200px',
+      contain: 'content'
     }),
     [config.spacing]
   );
@@ -115,11 +162,18 @@ const InstagramFeed = ({
     if (loading) return <LoadingState />;
     if (error) return <ErrorState error={error} />;
     if (!media.length) {
-      return <p style={{textAlign: 'center'}}>No media to display</p>;
+      return (
+        <div className="instagram-feed__empty" style={{minHeight: '100px', textAlign: 'center'}}>
+          No media to display
+        </div>
+      );
     }
 
     return (
-      <div style={config.layout === LAYOUT_TYPES.HIGHLIGHT ? highlightStyle : gridStyle}>
+      <div
+        ref={containerRef}
+        style={config.layout === LAYOUT_TYPES.HIGHLIGHT ? highlightStyle : gridStyle}
+      >
         {config.layout === LAYOUT_TYPES.HIGHLIGHT
           ? media
               .slice(0, 5)
@@ -137,7 +191,7 @@ const InstagramFeed = ({
 
   if (preview) {
     return (
-      <LegacyCard title={'Preview'} sectioned>
+      <LegacyCard title="Preview" sectioned>
         {renderContent()}
       </LegacyCard>
     );

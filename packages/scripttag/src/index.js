@@ -25,6 +25,7 @@ console.log('Instagram Feed Script Starting...');
     }
 
     console.log('Feed config:', feedConfig);
+    console.log('Media:', media);
     console.log('Initializing display...');
 
     await displayManager.initialize({

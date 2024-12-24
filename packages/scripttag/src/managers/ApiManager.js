@@ -1,5 +1,6 @@
 // src/managers/ApiManager.js
 import makeRequest from '../helpers/api/makeRequest';
+import dummyMedia from '../components/const/dummyMedia';
 
 export default class ApiManager {
   getFeedConfig = async () => {
@@ -31,56 +32,7 @@ export default class ApiManager {
 
       return {
         feedConfig: response?.data?.feedConfig,
-        media: [
-          {
-            id: 1,
-            imageUrl: 'https://picsum.photos/400',
-            caption: 'Test image 1',
-            timestamp: '2 days ago'
-          },
-          {
-            id: 2,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 3,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 4,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 5,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 6,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 7,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          },
-          {
-            id: 8,
-            imageUrl: 'https://picsum.photos/401',
-            caption: 'Test image 2',
-            timestamp: '3 days ago'
-          }
-        ]
+        media: dummyMedia
       };
     } catch (error) {
       console.error('API Error:', error);

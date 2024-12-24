@@ -14,13 +14,13 @@ import {
   TextContainer
 } from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
-import InstagramFeed from '../../components/InstagramFeed/InstagramFeed';
+import InstagramFeed from '@avada/scripttag/src/components/InstagramFeed/InstagramFeed';
 import useActiveToast from '@assets/hooks/toast/useActiveToast';
 import useModal from '@assets/hooks/popup/useModal';
 import useGetApi from '@assets/hooks/api/useGetApi';
 import {api} from '@assets/helpers';
 import defaultFeedConfig from '@functions/const/defaultFeedConfig';
-import dummyMedia from '@assets/const/dummyMedia';
+import dummyMedia from '@avada/scripttag/src/components/const/dummyMedia';
 
 export default function Home() {
   const {toastMarkup, handleActiveToastChange} = useActiveToast(false, '');
@@ -213,7 +213,7 @@ export default function Home() {
 
             <Layout.Section>
               <div className="feed-preview">
-                <InstagramFeed media={dummyMedia} config={feedConfig} preview={true} />
+                <InstagramFeed media={dummyMedia} config={feedConfig} preview={true} shopifyMode={true} />
               </div>
             </Layout.Section>
           </Layout>

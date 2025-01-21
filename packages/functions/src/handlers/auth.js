@@ -9,7 +9,10 @@ import createErrorHandler from '@functions/middleware/errorHandler';
 import firebase from 'firebase-admin';
 import appConfig from '@functions/config/app';
 import {getShopByShopifyDomain} from '@avada/shopify-auth';
-import {addFeedConfig, getFeedConfigByShopDomain} from '@functions/repositories/instagramRepository';
+import {
+  addFeedConfig,
+  getFeedConfigByShopDomain
+} from '@functions/repositories/instagramRepository';
 import defaultFeedConfig from '@functions/const/defaultFeedConfig';
 import {scriptTagCreate} from '@functions/services/scriptTagService';
 
@@ -65,7 +68,6 @@ app.use(
 
         const savedConfig = await getFeedConfigByShopDomain(shopDomain);
         console.log('Saved feed config:', savedConfig);
-
       } catch (err) {
         console.log(err);
       }

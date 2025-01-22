@@ -1,4 +1,4 @@
-// functions/src/controllers/scriptTagService.js
+// functions/src/services/scriptTagService.js
 import Shopify from 'shopify-api-node';
 import appConfig from '@functions/config/app';
 

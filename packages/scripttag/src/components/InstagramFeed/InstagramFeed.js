@@ -43,7 +43,6 @@ const MediaItem = memo(({item, index, config}) => {
           position: 'absolute'
         }}
       />
-
       <img
         ref={imageRef}
         alt={item.caption || ''}
@@ -67,7 +66,6 @@ const MediaItem = memo(({item, index, config}) => {
           console.error(`Failed to load image: ${item.imageUrl}`);
         }}
       />
-
       <div
         className="instagram-feed__overlay"
         style={{

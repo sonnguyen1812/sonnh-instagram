@@ -1,3 +1,4 @@
+// packages/functions/src/config/shopify.js
 import * as functions from 'firebase-functions';
 
 const {shopify} = functions.config();

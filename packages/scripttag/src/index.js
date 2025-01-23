@@ -1,3 +1,4 @@
+// packages/scripttag/src/index.js
 import ApiManager from './managers/ApiManager';
 import DisplayManager from './managers/DisplayManager';
 

@@ -1,3 +1,4 @@
+// packages/functions/src/controllers/shopController.js
 import {getCurrentShop} from '../helpers/auth';
 import {getShopInfoByShopId} from '@functions/repositories/shopInfoRepository';
 import {getShopById} from '@functions/repositories/shopRepository';

@@ -1,3 +1,4 @@
+// packages/assets/src/hooks/api/useFetchApi.js
 import {useEffect, useState} from 'react';
 import {api} from '@assets/helpers';
 import queryString from 'query-string';

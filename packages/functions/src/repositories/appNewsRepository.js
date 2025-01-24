@@ -1,3 +1,4 @@
+// packages/functions/src/repositories/appNewsRepository.js
 import {api} from '@functions/helpers/api';
 import cleanEmptyField from '@functions/helpers/utils/cleanEmptyField';
 import qs from 'qs';

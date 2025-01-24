@@ -1,3 +1,4 @@
+// packages/assets/src/standalone.js
 import App from './App';
 import React from 'react';
 import './styles/app.scss';

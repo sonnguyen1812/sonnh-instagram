@@ -1,3 +1,4 @@
+// packages/functions/src/index.js
 import * as functions from 'firebase-functions';
 
 import apiHandler from './handlers/api';

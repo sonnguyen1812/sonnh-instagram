@@ -1,3 +1,4 @@
+// packages/assets/src/pages/Samples/Samples.js
 import React from 'react';
 import {Card, IndexTable, Layout, Page, useIndexResourceState, Text, Button} from '@shopify/polaris';
 import useFetchApi from '@assets/hooks/api/useFetchApi';

@@ -1,3 +1,4 @@
+// packages/assets/src/layouts/FullLayout/AppFullLayout.js
 import React, {useState} from 'react';
 import {Frame, Layout, Loading, Scrollable, Toast} from '@shopify/polaris';
 import PropTypes from 'prop-types';

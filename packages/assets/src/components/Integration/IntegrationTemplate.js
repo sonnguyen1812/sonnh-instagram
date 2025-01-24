@@ -1,3 +1,4 @@
+// packages/assets/src/components/Integration/IntegrationTemplate.js
 import {
   Badge,
   Banner,

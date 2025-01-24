@@ -1,3 +1,4 @@
+// packages/functions/src/helpers/utils/cleanEmptyField.js
 export default function cleanEmptyField(obj) {
   return Object.keys(obj).reduce((prev, field) => {
     const value = obj[field];

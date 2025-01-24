@@ -1,3 +1,4 @@
+// packages/assets/src/reducers/storeReducer.js
 import React, {createContext, useContext, useEffect, useReducer} from 'react';
 import PropTypes from 'prop-types';
 import {getSubscription, reducer} from '@assets/actions/storeActions';

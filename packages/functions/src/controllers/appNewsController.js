@@ -1,3 +1,4 @@
+// packages/functions/src/controllers/appNewsController.js
 import {getAppNewsList} from '@functions/repositories/appNewsRepository';
 
 /**

@@ -1,3 +1,4 @@
+// packages/assets/src/components/Integration/IntegrationCard.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card, Icon, LegacyStack, Text} from '@shopify/polaris';

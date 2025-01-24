@@ -1,3 +1,4 @@
+// packages/assets/src/layouts/AppLayout/AppNavigation.js
 import React from 'react';
 import {Navigation} from '@shopify/polaris';
 import {useHistory, useLocation} from 'react-router-dom';

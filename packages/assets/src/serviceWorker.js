@@ -1,3 +1,4 @@
+// packages/assets/src/serviceWorker.js
 /**
  * Register a service worker for cache everything and load an application faster.
  * It only works on production mode

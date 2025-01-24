@@ -1,3 +1,4 @@
+// packages/functions/index.d.ts
 import {Timestamp} from '@google-cloud/firestore/build/src';
 
 declare interface IUserContext {

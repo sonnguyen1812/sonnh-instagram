@@ -1,4 +1,4 @@
-// packages/assets/src/components/InstagramFeed/InstagramFeed.js
+// packages/scripttag/src/components/InstagramFeed/InstagramFeed.js
 import React, {memo, useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {LegacyCard, SkeletonDisplayText, Spinner} from '@shopify/polaris';

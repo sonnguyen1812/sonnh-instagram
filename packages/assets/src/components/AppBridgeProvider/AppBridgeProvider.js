@@ -1,3 +1,4 @@
+// packages/assets/src/components/AppBridgeProvider/AppBridgeProvider.js
 import React, {useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import {NavigationMenu, Provider} from '@shopify/app-bridge-react';

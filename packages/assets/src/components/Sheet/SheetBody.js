@@ -1,3 +1,4 @@
+// packages/assets/src/components/Sheet/SheetBody.js
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Scrollable} from '@shopify/polaris';

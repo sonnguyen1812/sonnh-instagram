@@ -1,3 +1,4 @@
+// packages/assets/src/components/AppNews/AppNewsSheet.js
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
 import {

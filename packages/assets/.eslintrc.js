@@ -1,3 +1,4 @@
+// packages/assets/.eslintrc.js
 module.exports = {
   'env': {
     'browser': true,

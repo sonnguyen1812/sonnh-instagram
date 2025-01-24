@@ -1,3 +1,4 @@
+// packages/functions/src/presenters/shopPresenter.js
 /**
  * Strip access token by default
  *

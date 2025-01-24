@@ -1,3 +1,4 @@
+// packages/assets/src/main.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import enTranslations from '@shopify/polaris/locales/en.json';

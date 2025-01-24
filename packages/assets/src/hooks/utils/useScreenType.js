@@ -1,3 +1,4 @@
+// packages/assets/src/hooks/utils/useScreenType.js
 import useScreenTypeHook from 'react-screentype-hook';
 
 /**

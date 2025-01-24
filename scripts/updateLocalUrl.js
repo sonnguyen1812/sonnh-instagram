@@ -1,3 +1,4 @@
+// scripts/updateLocalUrl.js
 const fs = require('fs');
 
 const runtimeFile = './packages/functions/.runtimeconfig.json';

@@ -1,4 +1,4 @@
-// packages/functions/src/const/defaultSettings.js
+// packages/functions/src/const/defaultFeedConfig.js
 const defaultFeedConfig = {
   title: 'Instagram Feed',
   layout: 1,

@@ -1,3 +1,4 @@
+// packages/assets/src/components/Footer/Footer.js
 import React from 'react';
 import {Button, FooterHelp, Layout} from '@shopify/polaris';
 import './Footer.css';

@@ -1,3 +1,4 @@
+// packages/assets/src/hooks/api/useGetApi.js
 import {useEffect, useState} from 'react';
 import {api} from '@assets/helpers';
 import {handleError} from '@assets/services/errorService';

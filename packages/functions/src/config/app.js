@@ -1,3 +1,4 @@
+// packages/functions/src/config/app.js
 import * as functions from 'firebase-functions';
 
 const {app} = functions.config();

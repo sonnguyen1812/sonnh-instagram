@@ -1,3 +1,4 @@
+// packages/functions/src/services/errorService.js
 import {getCurrentUser} from '@functions/helpers/auth';
 
 /**

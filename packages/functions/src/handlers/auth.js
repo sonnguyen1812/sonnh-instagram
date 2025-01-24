@@ -37,7 +37,7 @@ app.use(contentSecurityPolicy(true));
 // Register all routes for the application
 app.use(
   shopifyAuth({
-    // accessTokenKey: shopifyConfig.accessTokenKey,
+    accessTokenKey: shopifyConfig.accessTokenKey,
     apiKey: shopifyConfig.apiKey,
     firebaseApiKey: shopifyConfig.firebaseApiKey,
     scopes: shopifyConfig.scopes,

@@ -1,3 +1,4 @@
+// packages/functions/src/repositories/shopInfoRepository.js
 import {Firestore} from '@google-cloud/firestore';
 import {presentDataAndFormatDate} from '@avada/firestore-utils';
 

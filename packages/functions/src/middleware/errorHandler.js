@@ -1,3 +1,4 @@
+// packages/functions/src/middleware/errorHandler.js
 /**
  * Create a new middleware to handle catch all errors
  *

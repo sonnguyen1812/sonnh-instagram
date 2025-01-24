@@ -1,3 +1,4 @@
+// packages/assets/src/helpers/getDomain.js
 /**
  * Return shop domain, if empty or blank return shopifyDomain instead
  *

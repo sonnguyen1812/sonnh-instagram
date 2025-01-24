@@ -1,3 +1,4 @@
+// packages/functions/src/controllers/subscriptionController.js
 import {getCurrentShop} from '@functions/helpers/auth';
 import {getShopById} from '@functions/repositories/shopRepository';
 

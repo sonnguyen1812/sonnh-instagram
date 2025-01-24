@@ -1,4 +1,4 @@
-// src/managers/ApiManager.js
+// packages/scripttag/src/managers/ApiManager.js
 import makeRequest from '../helpers/api/makeRequest';
 import dummyMedia from '../components/const/dummyMedia';
 

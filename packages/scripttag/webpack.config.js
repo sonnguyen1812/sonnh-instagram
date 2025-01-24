@@ -1,3 +1,4 @@
+// packages/scripttag/webpack.config.js
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
 

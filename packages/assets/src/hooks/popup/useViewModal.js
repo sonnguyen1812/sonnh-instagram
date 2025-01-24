@@ -1,3 +1,4 @@
+// packages/assets/src/hooks/popup/useViewModal.js
 import React, {useState} from 'react';
 import {Modal} from '@shopify/polaris';
 

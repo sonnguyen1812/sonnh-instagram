@@ -1,3 +1,4 @@
+// packages/assets/src/components/Sheet/SheetHeader.js
 import React from 'react';
 import {Button, Text} from '@shopify/polaris';
 import * as PropTypes from 'prop-types';

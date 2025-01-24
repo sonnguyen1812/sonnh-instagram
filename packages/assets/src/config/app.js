@@ -1,3 +1,4 @@
+// packages/assets/src/config/app.js
 import appRoute from '@assets/const/app';
 
 export const isEmbeddedApp = process.env.IS_EMBEDDED_APP === 'yes';

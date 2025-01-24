@@ -1,3 +1,4 @@
+// packages/assets/src/helpers.js
 import axios from 'axios';
 import createApp from '@shopify/app-bridge';
 import {authenticatedFetch} from '@shopify/app-bridge-utils';

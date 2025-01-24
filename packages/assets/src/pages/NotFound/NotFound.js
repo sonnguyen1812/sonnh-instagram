@@ -1,3 +1,4 @@
+// packages/assets/src/pages/NotFound/NotFound.js
 import React from 'react';
 import {EmptyState, Layout, Page} from '@shopify/polaris';
 

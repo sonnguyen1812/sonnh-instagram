@@ -1,3 +1,4 @@
+// packages/scripttag/src/helpers/api/makeRequest.js
 /**
  * Wrap XHR in promise
  *

@@ -1,3 +1,4 @@
+// packages/assets/src/components/Loading/Loading.js
 import React from 'react';
 import {Spinner} from '@shopify/polaris';
 import NotFound from '@assets/pages/NotFound/NotFound';

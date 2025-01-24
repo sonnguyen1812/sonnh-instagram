@@ -1,3 +1,4 @@
+// alias.js
 System.config({
   paths: {
     '@assets/*': './packages/assets/src/*',

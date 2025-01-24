@@ -1,3 +1,4 @@
+// packages/scripttag/src/helpers/insertHelpers.js
 export const insertAfter = (el, referenceNode) => {
   referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
 };

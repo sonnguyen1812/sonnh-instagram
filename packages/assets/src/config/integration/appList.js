@@ -1,3 +1,4 @@
+// packages/assets/src/config/integration/appList.js
 import {CodeIcon} from '@shopify/polaris-icons';
 
 export const LOGO_ALI_REVIEWS = 'https://cdn1.avada.io/joy/alireview-logo.jpeg';

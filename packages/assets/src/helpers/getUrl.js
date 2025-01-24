@@ -1,3 +1,4 @@
+// packages/assets/src/helpers/getUrl.js
 import appRoute from '../const/app';
 import isEmbeddedAppEnv from './isEmbeddedAppEnv';
 

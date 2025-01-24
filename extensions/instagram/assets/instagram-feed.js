@@ -1,4 +1,4 @@
-// extensions/instagram/blocks/instagram-feed.js
+// extensions/instagram/assets/instagram-feed.js
 (function() {
   const BASE_URL = 'http://localhost:5050/scripttag';
 

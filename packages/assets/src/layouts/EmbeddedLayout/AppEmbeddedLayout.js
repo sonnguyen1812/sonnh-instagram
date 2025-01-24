@@ -1,3 +1,4 @@
+// packages/assets/src/layouts/EmbeddedLayout/AppEmbeddedLayout.js
 import React from 'react';
 import {Frame, Loading, Toast} from '@shopify/polaris';
 import PropTypes from 'prop-types';

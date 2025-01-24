@@ -1,3 +1,4 @@
+// packages/assets/src/services/shopService.js
 /**
  * @param {Shop} shop
  * @param {ShopInfo} shopInfo

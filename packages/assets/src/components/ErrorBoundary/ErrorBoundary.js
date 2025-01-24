@@ -1,3 +1,4 @@
+// packages/assets/src/components/ErrorBoundary/ErrorBoundary.js
 /* eslint-disable require-jsdoc */
 import React, {Component} from 'react';
 import NotFound from '@assets/pages/NotFound/NotFound';

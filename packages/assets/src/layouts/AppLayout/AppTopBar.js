@@ -1,3 +1,4 @@
+// packages/assets/src/layouts/AppLayout/AppTopBar.js
 import React from 'react';
 import {Button, Icon, LegacyStack, Link, Text, Thumbnail, TopBar} from '@shopify/polaris';
 import PropTypes from 'prop-types';

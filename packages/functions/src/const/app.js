@@ -1,3 +1,4 @@
+// packages/functions/src/const/app.js
 export const apiPrefix = {
   embed: '/api',
   standalone: '/apiSa'

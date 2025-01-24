@@ -1,3 +1,4 @@
+// packages/assets/src/helpers/utils/formatFullTime.js
 const fullMonthList = [
   'January',
   'February',

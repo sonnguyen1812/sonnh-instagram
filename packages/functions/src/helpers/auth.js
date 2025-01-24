@@ -1,3 +1,4 @@
+// packages/functions/src/helpers/auth.js
 /**
  * Get current shop id from Koa context
  * Shop ID was set from authentication step in Shopify login

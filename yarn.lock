@@ -48,10 +48,10 @@
     ora "^4.0.2"
     string-template "^1.0.0"
 
-"@avada/core@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.avada.io/@avada%2fcore/-/core-3.2.0.tgz#2751c1a34dec8a145ae9258e610111fada6f7845"
-  integrity sha512-hzbS/t9DnxbnbR3Wn7kXYMvIDOHxMrvIM6H95yabVDGh4773zpTyHvE+zYXgbISOezwnUweI+rGIUpLfn24b4g==
+"@avada/core@1.1.12":
+  version "1.1.12"
+  resolved "https://registry.avada.io/@avada%2fcore/-/core-1.1.12.tgz#efabf09e3353c8bda3ab81f476593c8c7f64fceb"
+  integrity sha512-GIEJrIoQgLPxqYxf7seK971j2bWuAVjftCWxUKnV27X5EogLSrUANih2xNhrbxGkfi7Qu/9p40TFLI4JJaypAA==
   dependencies:
     "@avada/shopify-api" "1.0.0"
     "@shopify/koa-shopify-webhooks" "^5.0.2"

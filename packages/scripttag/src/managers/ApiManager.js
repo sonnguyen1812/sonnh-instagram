@@ -29,6 +29,7 @@ export default class ApiManager {
       );
 
       console.log('API Response:', response);
+      console.log('API:', `${baseUrl}/clientApi/instagram/feed?shopDomain=${shopifyDomain}`);
 
       return {
         feedConfig: response?.data?.feedConfig,

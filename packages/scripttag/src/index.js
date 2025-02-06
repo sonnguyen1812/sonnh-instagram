@@ -33,6 +33,7 @@ console.log('Instagram Feed Script Starting...');
       feedConfig,
       media
     });
+    console.log('done');
   } catch (error) {
     console.error('Instagram Feed Error:', error);
   }

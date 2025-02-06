@@ -19,6 +19,7 @@ import useActiveToast from '@assets/hooks/toast/useActiveToast';
 import useModal from '@assets/hooks/popup/useModal';
 import useGetApi from '@assets/hooks/api/useGetApi';
 import {api} from '@assets/helpers';
+// eslint-disable-next-line no-unused-vars
 import defaultFeedConfig from '@functions/const/defaultFeedConfig';
 import dummyMedia from '@avada/scripttag/src/components/const/dummyMedia';
 
@@ -30,7 +31,6 @@ export default function Home() {
   // Get feed config từ API sử dụng useGetApi hook
   const {data: feedConfig, setData: setFeedConfig, fetched, setFetched} = useGetApi({
     url: '/instagram/feed',
-    defaultData: defaultFeedConfig,
     onSuccess: () => {
       setIsInitialLoading(false);
     }

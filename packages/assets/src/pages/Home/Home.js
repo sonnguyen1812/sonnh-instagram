@@ -199,12 +199,7 @@ export default function Home() {
                       max={3}
                     />
                   </FormLayout.Group>
-                  <Button
-                    fullWidth
-                    variant="primary"
-                    loading={loading}
-                    onClick={() => openModal()}
-                  >
+                  <Button fullWidth variant="primary" loading={loading} onClick={() => openModal()}>
                     Save Feed
                   </Button>
                 </FormLayout>
@@ -213,7 +208,12 @@ export default function Home() {
 
             <Layout.Section>
               <div className="feed-preview">
-                <InstagramFeed media={dummyMedia} config={feedConfig} preview={true} shopifyMode={true} />
+                <InstagramFeed
+                  media={dummyMedia}
+                  config={feedConfig}
+                  preview={true}
+                  shopifyMode={true}
+                />
               </div>
             </Layout.Section>
           </Layout>

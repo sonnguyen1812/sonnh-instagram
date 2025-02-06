@@ -14,6 +14,7 @@ import {
   getFeedConfigByShopDomain
 } from '@functions/repositories/instagramRepository';
 import defaultFeedConfig from '@functions/const/defaultFeedConfig';
+// eslint-disable-next-line no-unused-vars
 import {scriptTagCreate} from '@functions/services/scriptTagService';
 
 if (firebase.apps.length === 0) {

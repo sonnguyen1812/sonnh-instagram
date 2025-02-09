@@ -88,8 +88,20 @@ app.use(
         console.log(err);
       }
     },
+    afterUninstall: async ctx => {
+      try {
+        console.log('After uninstall:');
+      } catch (err) {
+        console.log(err);
+      }
+    },
     afterThemePublish: ctx => {
       // Publish assets when theme is published or changed here
+      try {
+        console.log('After theme publish');
+      } catch (err) {
+        console.log(err);
+      }
       return (ctx.body = {
         success: true
       });

@@ -20,7 +20,6 @@ export const getFeedConfig = async shopId => {
   }))[0];
 };
 
-// packages/functions/src/repositories/instagramRepository.js
 export const getFeedConfigByShopDomain = async shopDomain => {
   console.log('Getting feed config for shop:', shopDomain);
 
@@ -44,8 +43,41 @@ export const getFeedConfigByShopDomain = async shopDomain => {
 };
 
 export const updateFeedConfig = async (shopId, updateInfo) => {
-  const configDoc = await getFeedConfig(shopId);
-  return await instagramFeedRef.doc(configDoc.id).update({...updateInfo});
+  try {
+    // Validate input parameters
+    if (!shopId) {
+      throw new Error('Shop ID is required');
+    }
+    if (!updateInfo || Object.keys(updateInfo).length === 0) {
+      throw new Error('Update information is required');
+    }
+
+    // Get existing config
+    const configDoc = await getFeedConfig(shopId);
+    if (!configDoc) {
+      throw new Error(`Feed configuration not found for shop ID: ${shopId}`);
+    }
+
+    // Update document
+    await instagramFeedRef.doc(configDoc.id).update({...updateInfo});
+    console.log('Feed config updated successfully for shop:', shopId);
+
+    // Return updated document
+    return {
+      id: configDoc.id,
+      ...configDoc,
+      ...updateInfo
+    };
+  } catch (error) {
+    console.error('Error updating feed config:', {
+      shopId,
+      error: error.message,
+      stack: error.stack
+    });
+
+    // Throw custom error with more context
+    throw new Error(`Failed to update feed config: ${error.message}`);
+  }
 };
 
 export const addFeedConfig = async ({shopDomain, shopId, addInfo}) => {

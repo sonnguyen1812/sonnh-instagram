@@ -1,4 +1,4 @@
-// packages/scripttag/src/components/const/dummyMedia.js
+// packages/functions/src/const/dummyMedia.js
 const dummyMedia = [
   {
     id: 1,

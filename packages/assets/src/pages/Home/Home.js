@@ -14,14 +14,14 @@ import {
   TextContainer
 } from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
-import InstagramFeed from '@avada/scripttag/src/components/InstagramFeed/InstagramFeed';
+import InstagramFeed from '@assets/components/InstagramFeed/InstagramFeed';
 import useActiveToast from '@assets/hooks/toast/useActiveToast';
 import useModal from '@assets/hooks/popup/useModal';
 import useGetApi from '@assets/hooks/api/useGetApi';
 import {api} from '@assets/helpers';
 // eslint-disable-next-line no-unused-vars
 import defaultFeedConfig from '@functions/const/defaultFeedConfig';
-import dummyMedia from '@avada/scripttag/src/components/const/dummyMedia';
+import dummyMedia from '@functions/const/dummyMedia';
 
 export default function Home() {
   const {toastMarkup, handleActiveToastChange} = useActiveToast(false, '');

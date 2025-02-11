@@ -1,7 +1,7 @@
 import {isEmpty} from '@avada/utils';
 import {makeGraphQlApi} from '../helpers/api';
 
-import {META_FIELD_KEY, META_FIELD_NAMESPACE} from '../const/metafields';
+import {META_FIELD_NAMESPACE} from '../const/metafields';
 import {getShopById} from '@avada/shopify-auth';
 import Shopify from 'shopify-api-node';
 

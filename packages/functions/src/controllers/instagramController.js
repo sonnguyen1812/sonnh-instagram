@@ -5,7 +5,7 @@ import Shopify from 'shopify-api-node';
 import dummyMedia from '../const/dummyMedia';
 import {getShopById} from '@avada/shopify-auth';
 import {upsertMetaField} from '@functions/services/metafieldService';
-import {META_FIELD_KEY, META_FIELD_NAMESPACE} from '../const/metafields';
+import {META_FIELD_NAMESPACE} from '../const/metafields';
 
 export const getFeed = async ctx => {
   try {

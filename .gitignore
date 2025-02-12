@@ -73,6 +73,7 @@ stats.json
 # IDE
 .idea/
 .vscode/
+.cursor/
 
 # Firebase
 .firebaserc

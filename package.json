@@ -13,7 +13,7 @@
     "logs": "./node_modules/.bin/firebase functions:log",
     "predeploy": "yarn workspace @avada/assets run production && yarn workspace @avada/functions run production",
     "eslint-fix": "npm --prefix packages/assets/ run eslint-fix && npm --prefix packages/functions/ run eslint-fix",
-    "start-dev-embed": "npm run timeout && echo 'backend build running...' && concurrently \"yarn workspace @avada/functions run watch\" \"yarn workspace @avada/scripttag run webpack-watch\"",
+    "start-dev-embed": "npm run timeout && echo 'backend build running...' && concurrently \"yarn workspace @avada/functions run watch\"",
     "start-dev": "concurrently \"yarn workspace @avada/assets run watch\" \"yarn workspace @avada/functions run watch\" \"yarn workspace @avada/scripttag run webpack-watch\"",
     "emulators": "cross-env GOOGLE_APPLICATION_CREDENTIALS=serviceAccount.development.json ./node_modules/.bin/firebase emulators:start --only hosting,functions",
     "dev": "shopify app dev --skip-dependencies-installation",

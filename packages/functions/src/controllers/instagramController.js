@@ -2,7 +2,7 @@
 import {getCurrentShop} from '@functions/helpers/auth';
 import {getFeedConfig, updateFeedConfig} from '../repositories/instagramRepository';
 import Shopify from 'shopify-api-node';
-import dummyMedia from '../const/dummyMedia';
+import {dummyMedia} from '../const/dummyMedia';
 import {getShopById} from '@avada/shopify-auth';
 import {upsertMetaField} from '@functions/services/metafieldService';
 import {META_FIELD_NAMESPACE} from '../const/metafields';

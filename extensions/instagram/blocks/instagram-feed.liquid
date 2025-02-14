@@ -69,9 +69,7 @@
         <img 
           id="modal-image" 
           class="instagram-modal__image"
-          loading="lazy"
-          width="600"
-          height="600"
+          loading="eager"
         >
         <video 
           id="modal-video" 
@@ -156,7 +154,7 @@
       modalCaption.textContent = data.caption;
       modalLikes.textContent = data.likeCount.toLocaleString();
       modalComments.textContent = data.commentCount.toLocaleString();
-      modal.style.display = 'block';
+      modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     });
   });
@@ -293,7 +291,7 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 1000;
     overflow-y: auto;
     padding: 20px;

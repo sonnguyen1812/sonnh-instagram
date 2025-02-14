@@ -1,16 +1,114 @@
 {% # extensions/instagram/blocks/instagram-feed.liquid %}
 
-<div id="instagram-feed-container">
-  {% if section.settings.heading != blank %}
-    <h2>{{ section.settings.heading }}</h2>
+{{ 'instagram-feed.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="{{ 'instagram-feed.css' | asset_url }}">
+
+<div class="instagram-feed">
+  {% assign feed_config = shop.metafields.instagramfeed.feed_config.value %}
+  {% assign media_list = shop.metafields.instagramfeed.media_list.value %}
+
+  {% if feed_config %}
+    <div class="instagram-feed__header">
+      <h2>{{ feed_config.title }}</h2>
+    </div>
+
+    {% if feed_config.layout == 2 %}
+      {% assign total_items = 5 %}
+    {% else %}
+      {% assign total_items = feed_config.rows | times: feed_config.columns %}
+    {% endif %}
+
+    <div class="instagram-feed__grid {% if feed_config.layout == 2 %}instagram-feed__grid--highlight{% endif %}" style="gap: {{ feed_config.spacing }}px;">
+      {% for item in media_list limit: total_items %}
+        {% assign is_first = forloop.first %}
+        <div class="instagram-feed__item {% if feed_config.layout == 2 and is_first %}instagram-feed__item--highlight{% endif %}" data-item='{{ item | json }}'>
+          {% if item.type == 'video' %}
+            <div class="instagram-feed__media-wrapper">
+              <img
+                src="{{ item.posterUrl }}"
+                alt="{{ item.caption }}"
+                loading="lazy"
+                width="600"
+                height="600"
+                class="instagram-feed__poster">
+              <video
+                class="instagram-feed__video"
+                src="{{ item.videoUrl }}"
+                muted
+                playsinline
+                loop
+                preload="none"
+                width="600"
+                height="600"></video>
+              <div class="instagram-feed__video-indicator">Video</div>
+            </div>
+          {% else %}
+            <img
+              src="{{ item.mediaUrl }}"
+              alt="{{ item.caption }}"
+              loading="lazy"
+              width="600"
+              height="600"
+              class="instagram-feed__image">
+          {% endif %}
+          <div class="instagram-feed__overlay">
+            <p class="time">{{ item.postDate | date: "%d/%m/%Y" }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="instagram-feed__empty">
+      No feed configuration found
+    </div>
   {% endif %}
 </div>
 
+<div id="instagram-modal" class="instagram-modal">
+  <div class="instagram-modal__content">
+    <button class="instagram-modal__close">&times;</button>
+    <div class="instagram-modal__inner">
+      <div class="instagram-modal__media">
+        <img 
+          id="modal-image" 
+          class="instagram-modal__image"
+          loading="lazy"
+          width="600"
+          height="600"
+        >
+        <video 
+          id="modal-video" 
+          class="instagram-modal__video" 
+          playsinline 
+          loop
+          controls>
+        </video>
+      </div>
+      <div class="instagram-modal__info">
+        <div class="instagram-modal__header">
+          <i class="fa-brands fa-instagram"></i>
+          <span>Instagram</span>
+        </div>
+        <p id="modal-caption" class="instagram-modal__caption"></p>
+        <div class="instagram-modal__stats">
+          <span id="modal-likes">❤️
+            <span></span>
+            likes</span>
+          <span id="modal-comments">💬
+            <span></span>
+            comments</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'instagram-feed.js' | asset_url }}" defer></script>
+
 {% schema %}
-{
-  "name": "Instagram Feed",
-  "target": "section",
-  "javascript": "instagram-feed.js",
-  "settings": []
-}
+  {
+    "name": "Instagram Feed",
+    "target": "section",
+    "settings": []
+  }
 {% endschema %}

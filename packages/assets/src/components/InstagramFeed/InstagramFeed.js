@@ -1,4 +1,3 @@
-// packages/assets/src/components/InstagramFeed/InstagramFeed.js
 import React, {memo, useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {LegacyCard, SkeletonDisplayText, Spinner} from '@shopify/polaris';
@@ -15,14 +14,14 @@ const MediaItem = memo(({item, index, config}) => {
   useEffect(() => {
     if (imageRef.current) {
       const img = new Image();
-      img.src = item.imageUrl;
+      img.src = item.type === 'video' ? item.posterUrl : item.mediaUrl;
       img.onload = () => {
         if (imageRef.current) {
-          imageRef.current.src = item.imageUrl;
+          imageRef.current.src = item.type === 'video' ? item.posterUrl : item.mediaUrl;
         }
       };
     }
-  }, [item.imageUrl]);
+  }, [item]);
 
   return (
     <div
@@ -30,25 +29,16 @@ const MediaItem = memo(({item, index, config}) => {
       style={{
         position: 'relative',
         width: '100%',
-        aspectRatio: '1 / 1',
-        overflow: 'hidden'
+        paddingBottom: '100%',
+        overflow: 'hidden',
+        borderRadius: '8px',
+        backgroundColor: '#f6f6f6'
       }}
     >
-      <div
-        className="instagram-feed__placeholder"
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#f6f6f6',
-          position: 'absolute'
-        }}
-      />
       <img
         ref={imageRef}
         alt={item.caption || ''}
         className="instagram-feed__image"
-        width="100%"
-        height="100%"
         loading="lazy"
         decoding="async"
         fetchpriority={index < 4 ? 'high' : 'low'}
@@ -58,14 +48,27 @@ const MediaItem = memo(({item, index, config}) => {
           left: 0,
           width: '100%',
           height: '100%',
-          objectFit: isHighlight ? 'cover' : 'contain',
-          borderRadius: '8px'
-        }}
-        onError={e => {
-          e.target.src = 'fallback-image.jpg';
-          console.error(`Failed to load image: ${item.imageUrl}`);
+          objectFit: 'cover'
         }}
       />
+      {item.type === 'video' && (
+        <div
+          className="instagram-feed__video-indicator"
+          style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            background: 'rgba(0,0,0,0.7)',
+            color: 'white',
+            padding: '6px 12px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            fontWeight: '500'
+          }}
+        >
+          Video
+        </div>
+      )}
       <div
         className="instagram-feed__overlay"
         style={{
@@ -73,19 +76,19 @@ const MediaItem = memo(({item, index, config}) => {
           bottom: 0,
           left: 0,
           right: 0,
-          background: 'rgba(0,0,0,0.6)',
+          background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
           color: 'white',
-          padding: '12px',
-          opacity: 0,
-          transition: 'opacity 0.2s',
-          transform: 'translateZ(0)'
+          padding: '20px 12px 12px',
+          opacity: 1
         }}
       >
-        <p className="time">{item.timestamp}</p>
+        <p style={{margin: 0, fontSize: '13px'}}>{new Date(item.postDate).toLocaleDateString()}</p>
       </div>
     </div>
   );
 });
+
+MediaItem.displayName = 'MediaItem';
 
 const LoadingState = memo(() => (
   <div
@@ -104,6 +107,8 @@ const LoadingState = memo(() => (
   </div>
 ));
 
+LoadingState.displayName = 'LoadingState';
+
 const ErrorState = memo(({error}) => (
   <div
     className="instagram-feed__error"
@@ -118,6 +123,8 @@ const ErrorState = memo(({error}) => (
   </div>
 ));
 
+ErrorState.displayName = 'ErrorState';
+
 const InstagramFeed = ({
   media = [],
   config = {
@@ -131,8 +138,6 @@ const InstagramFeed = ({
   loading = false,
   error = null
 }) => {
-  const containerRef = useRef(null);
-
   const gridStyle = React.useMemo(
     () => ({
       display: 'grid',
@@ -168,10 +173,7 @@ const InstagramFeed = ({
     }
 
     return (
-      <div
-        ref={containerRef}
-        style={config.layout === LAYOUT_TYPES.HIGHLIGHT ? highlightStyle : gridStyle}
-      >
+      <div style={config.layout === LAYOUT_TYPES.HIGHLIGHT ? highlightStyle : gridStyle}>
         {config.layout === LAYOUT_TYPES.HIGHLIGHT
           ? media
               .slice(0, 5)
@@ -198,14 +200,18 @@ const InstagramFeed = ({
   return renderContent();
 };
 
-// PropTypes validation
 InstagramFeed.propTypes = {
   media: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      imageUrl: PropTypes.string.isRequired,
+      type: PropTypes.oneOf(['image', 'video']).isRequired,
+      mediaUrl: PropTypes.string,
+      videoUrl: PropTypes.string,
+      posterUrl: PropTypes.string,
       caption: PropTypes.string,
-      timestamp: PropTypes.string
+      postDate: PropTypes.string,
+      likeCount: PropTypes.number,
+      commentCount: PropTypes.number
     })
   ),
   config: PropTypes.shape({
@@ -223,9 +229,14 @@ InstagramFeed.propTypes = {
 MediaItem.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    imageUrl: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['image', 'video']).isRequired,
+    mediaUrl: PropTypes.string,
+    videoUrl: PropTypes.string,
+    posterUrl: PropTypes.string,
     caption: PropTypes.string,
-    timestamp: PropTypes.string
+    postDate: PropTypes.string,
+    likeCount: PropTypes.number,
+    commentCount: PropTypes.number
   }).isRequired,
   index: PropTypes.number.isRequired,
   config: PropTypes.object.isRequired
@@ -235,5 +246,4 @@ ErrorState.propTypes = {
   error: PropTypes.string.isRequired
 };
 
-// Memo các components để tránh re-render không cần thiết
 export default memo(InstagramFeed);

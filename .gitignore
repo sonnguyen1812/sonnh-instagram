@@ -82,4 +82,5 @@ serviceAccount.json
 serviceAccount.*.json
 
 # Shopify
-shopify.**.toml
+shopify.app.**.toml
+shopify.app.toml

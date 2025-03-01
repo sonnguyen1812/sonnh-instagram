@@ -76,7 +76,6 @@ stats.json
 .cursor/
 
 # Firebase
-.firebaserc
 .runtimeconfig.json
 serviceAccount.json
 serviceAccount.*.json

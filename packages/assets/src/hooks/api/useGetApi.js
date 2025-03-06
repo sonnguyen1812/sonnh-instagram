@@ -10,7 +10,7 @@ export default function useGetApi({
   initLoad = true,
   presentData = null,
   initQueries = {},
-  onSuccess = null // Thêm callback onSuccess
+  onSuccess = null
 }) {
   const [loading, setLoading] = useState(initLoad);
   const [fetched, setFetched] = useState(false);

@@ -8,8 +8,6 @@
  * @param options
  * @returns {Promise<unknown>}
  */
-// src/helpers/api/makeRequest.js
-// src/helpers/api/makeRequest.js
 function makeRequest(url, method, data = null, options = {}) {
   // Create the XHR request
   const request = new XMLHttpRequest();

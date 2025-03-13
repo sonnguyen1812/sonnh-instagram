@@ -7,21 +7,44 @@ const LAYOUT_TYPES = {
   HIGHLIGHT: 2
 };
 
+// Hàm chuyển đổi dữ liệu từ Instagram API sang định dạng component
+const formatInstagramMedia = mediaItem => {
+  // Kiểm tra nếu đã là format cũ (từ dummy data)
+  if (mediaItem.type && mediaItem.mediaUrl) {
+    return mediaItem;
+  }
+
+  // Format từ Instagram API
+  return {
+    id: mediaItem.id,
+    type: mediaItem.media_type?.toLowerCase() === 'video' ? 'video' : 'image',
+    mediaUrl: mediaItem.media_url,
+    posterUrl: mediaItem.thumbnail_url || mediaItem.media_url,
+    caption: mediaItem.caption,
+    postDate: mediaItem.timestamp,
+    permalink: mediaItem.permalink
+  };
+};
+
 const MediaItem = memo(({item, index, config}) => {
   const imageRef = useRef(null);
   const isHighlight = config.layout === LAYOUT_TYPES.HIGHLIGHT && index === 0;
 
+  // Format item nếu cần
+  const formattedItem = formatInstagramMedia(item);
+
   useEffect(() => {
     if (imageRef.current) {
       const img = new Image();
-      img.src = item.type === 'video' ? item.posterUrl : item.mediaUrl;
+      img.src = formattedItem.type === 'video' ? formattedItem.posterUrl : formattedItem.mediaUrl;
       img.onload = () => {
         if (imageRef.current) {
-          imageRef.current.src = item.type === 'video' ? item.posterUrl : item.mediaUrl;
+          imageRef.current.src =
+            formattedItem.type === 'video' ? formattedItem.posterUrl : formattedItem.mediaUrl;
         }
       };
     }
-  }, [item]);
+  }, [formattedItem]);
 
   return (
     <div
@@ -37,7 +60,7 @@ const MediaItem = memo(({item, index, config}) => {
     >
       <img
         ref={imageRef}
-        alt={item.caption || ''}
+        alt={formattedItem.caption || ''}
         className="instagram-feed__image"
         loading="lazy"
         decoding="async"
@@ -51,7 +74,7 @@ const MediaItem = memo(({item, index, config}) => {
           objectFit: 'cover'
         }}
       />
-      {item.type === 'video' && (
+      {formattedItem.type === 'video' && (
         <div
           className="instagram-feed__video-indicator"
           style={{
@@ -82,7 +105,9 @@ const MediaItem = memo(({item, index, config}) => {
           opacity: 1
         }}
       >
-        <p style={{margin: 0, fontSize: '13px'}}>{new Date(item.postDate).toLocaleDateString()}</p>
+        <p style={{margin: 0, fontSize: '13px'}}>
+          {formattedItem.postDate ? new Date(formattedItem.postDate).toLocaleDateString() : ''}
+        </p>
       </div>
     </div>
   );
@@ -164,7 +189,7 @@ const InstagramFeed = ({
   const renderContent = () => {
     if (loading) return <LoadingState />;
     if (error) return <ErrorState error={error} />;
-    if (!media.length) {
+    if (!media || !media.length) {
       return (
         <div className="instagram-feed__empty" style={{minHeight: '100px', textAlign: 'center'}}>
           No media to display
@@ -204,14 +229,17 @@ InstagramFeed.propTypes = {
   media: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      type: PropTypes.oneOf(['image', 'video']).isRequired,
+      // Chấp nhận cả hai format
+      type: PropTypes.string,
+      media_type: PropTypes.string,
       mediaUrl: PropTypes.string,
-      videoUrl: PropTypes.string,
+      media_url: PropTypes.string,
+      thumbnail_url: PropTypes.string,
       posterUrl: PropTypes.string,
       caption: PropTypes.string,
       postDate: PropTypes.string,
-      likeCount: PropTypes.number,
-      commentCount: PropTypes.number
+      timestamp: PropTypes.string,
+      permalink: PropTypes.string
     })
   ),
   config: PropTypes.shape({
@@ -227,17 +255,7 @@ InstagramFeed.propTypes = {
 };
 
 MediaItem.propTypes = {
-  item: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    type: PropTypes.oneOf(['image', 'video']).isRequired,
-    mediaUrl: PropTypes.string,
-    videoUrl: PropTypes.string,
-    posterUrl: PropTypes.string,
-    caption: PropTypes.string,
-    postDate: PropTypes.string,
-    likeCount: PropTypes.number,
-    commentCount: PropTypes.number
-  }).isRequired,
+  item: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   config: PropTypes.object.isRequired
 };

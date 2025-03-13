@@ -17,6 +17,7 @@
     "start-dev": "concurrently \"yarn workspace @avada/assets run watch\" \"yarn workspace @avada/functions run watch\" \"yarn workspace @avada/scripttag run webpack-watch\"",
     "emulators": "cross-env GOOGLE_APPLICATION_CREDENTIALS=serviceAccount.development.json ./node_modules/.bin/firebase emulators:start --only hosting,functions",
     "dev": "shopify app dev --skip-dependencies-installation",
+    "ngrok-run": "ngrok http --url=relative-man-ruling.ngrok-free.app 5050",
     "dev-reset": "shopify app dev --skip-dependencies-installation --reset",
     "info": "shopify app info",
     "update-app-local-url": "shopify app update-url --app-url https://localhost:3000/authSa/shopify --redirect-urls=https://localhost:3000/auth/shopify/callback,https://localhost:3000/authSa/shopify/callback,https://localhost:3000/auth/shopify/embed/callback",
@@ -48,5 +49,6 @@
     "firebase-functions": "^5.0.1",
     "install": "^0.13.0",
     "npm": "^10.7.0"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -6,6 +6,7 @@ import apiSaHandler from './handlers/apiSa';
 import authHandler from './handlers/auth';
 import authSaHandler from './handlers/authSa';
 import clientApiHandler from './handlers/clientApi';
+import authSocialHandler from './handlers/authSocial';
 
 export const api = functions.https.onRequest(apiHandler.callback());
 export const apiSa = functions.https.onRequest(apiSaHandler.callback());
@@ -14,3 +15,5 @@ export const auth = functions.https.onRequest(authHandler.callback());
 export const authSa = functions.https.onRequest(authSaHandler.callback());
 
 export const clientApi = functions.https.onRequest(clientApiHandler.callback());
+
+export const authSocial = functions.https.onRequest(authSocialHandler.callback());

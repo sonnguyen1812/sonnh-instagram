@@ -4,7 +4,14 @@ import * as shopController from '@functions/controllers/shopController';
 import * as subscriptionController from '@functions/controllers/subscriptionController';
 import * as appNewsController from '@functions/controllers/appNewsController';
 
-import {getFeed, updateFeed} from '@functions/controllers/instagramController';
+import {
+  getFeed,
+  updateFeed,
+  connectInstagram,
+  getUserInfo,
+  getMediaInfo,
+  disconnectInstagram
+} from '../controllers/instagramController';
 
 import Router from 'koa-router';
 import {getApiPrefix} from '@functions/const/app';
@@ -20,6 +27,11 @@ export default function apiRouter(isEmbed = false) {
   // feed config
   router.get('/instagram/feed', getFeed);
   router.put('/instagram/feed', updateFeed);
+
+  router.get('/instagram/connect', connectInstagram);
+  router.get('/instagram/user', getUserInfo);
+  router.get('/instagram/media', getMediaInfo);
+  router.post('/instagram/disconnect', disconnectInstagram);
 
   return router;
 }

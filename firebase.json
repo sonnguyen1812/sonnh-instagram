@@ -64,6 +64,10 @@
         "function": "clientApi"
       },
       {
+        "source": "/authSocial/**",
+        "function": "authSocial"
+      },
+      {
         "source": "/embed/**",
         "destination": "/embed.html"
       },

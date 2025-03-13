@@ -93,7 +93,8 @@ const proxyConfig = {
   '^/auth(/|(\\?.*)?$)': proxyOptions,
   '^/apiSa(/|(\\?.*)?$)': proxyOptions,
   '^/clientApi(/|(\\?.*)?$)': proxyOptions,
-  '^/scripttag(/|(\\?.*)?$)': proxyOptions
+  '^/scripttag(/|(\\?.*)?$)': proxyOptions,
+  '^/authSocial(/|(\\?.*)?$)': proxyOptions
 };
 
 // https://vitejs.dev/config/

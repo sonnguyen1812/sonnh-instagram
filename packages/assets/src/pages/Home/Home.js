@@ -1,5 +1,5 @@
 // packages/assets/src/pages/Home/Home.js
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Frame,
   Page,
@@ -11,7 +11,8 @@ import {
   Icon,
   SkeletonBodyText,
   SkeletonDisplayText,
-  TextContainer
+  TextContainer,
+  ButtonGroup
 } from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
 import InstagramFeed from '@assets/components/InstagramFeed/InstagramFeed';
@@ -27,6 +28,11 @@ export default function Home() {
   const {toastMarkup, handleActiveToastChange} = useActiveToast(false, '');
   const [loading, setLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isUserConnected, setIsUserConnected] = useState(false);
+  const [isMediaConnected, setIsMediaConnected] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [refreshingData, setRefreshingData] = useState(false);
 
   // Get feed config từ API sử dụng useGetApi hook
   const {data: feedConfig, setData: setFeedConfig, fetched, setFetched} = useGetApi({
@@ -35,6 +41,87 @@ export default function Home() {
       setIsInitialLoading(false);
     }
   });
+
+  const {data: userInfo, setData: setUserInfo, fetched: fetchedUserInfo} = useGetApi({
+    url: '/instagram/user',
+    onSuccess: data => {
+      if (data) {
+        setIsUserConnected(true);
+      }
+    }
+  });
+
+  const {data: mediaInfo, setData: setMediaInfo, fetched: fetchedMediaInfo} = useGetApi({
+    url: '/instagram/media',
+    onSuccess: data => {
+      if (data && data.mediaList && data.mediaList.length > 0) {
+        setIsMediaConnected(true);
+      }
+    }
+  });
+
+  // Thêm timeout để đảm bảo không đợi quá lâu
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (isInitialLoading) {
+        setIsInitialLoading(false);
+      }
+    }, 2000); // Tối đa 2 giây chờ đợi
+
+    return () => clearTimeout(timeoutId);
+  }, [isInitialLoading]);
+
+  // Lắng nghe message từ popup
+  useEffect(() => {
+    const handleMessage = event => {
+      if (event.data && event.data.type === 'instagram_connected') {
+        if (event.data.success) {
+          handleActiveToastChange('Successfully connected Instagram', 'success');
+          setIsUserConnected(true);
+          setRefreshingData(true);
+          refreshInstagramData();
+        } else {
+          handleActiveToastChange(
+            `Failed to connect Instagram: ${event.data.error || 'Unknown error'}`,
+            'error'
+          );
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  // Refresh Instagram data
+  const refreshInstagramData = async () => {
+    try {
+      setRefreshingData(true);
+
+      // Fetch user info
+      const userResponse = await api('/instagram/user', {
+        method: 'GET'
+      });
+      if (userResponse.success) {
+        setUserInfo(userResponse.data);
+        setIsUserConnected(true);
+      }
+
+      // Fetch media
+      const mediaResponse = await api('/instagram/media', {
+        method: 'GET'
+      });
+      if (mediaResponse.success) {
+        setMediaInfo(mediaResponse.data);
+        setIsMediaConnected(true);
+      }
+    } catch (error) {
+      console.error('Error refreshing Instagram data:', error);
+      handleActiveToastChange('Error loading Instagram data', 'error');
+    } finally {
+      setRefreshingData(false);
+    }
+  };
 
   // Handle save feed config
   const handleSaveFeed = async () => {
@@ -88,10 +175,80 @@ export default function Home() {
         ...prevConfig,
         [key]: value
       };
-      console.log('Feed config after change:', newConfig);
       return newConfig;
     });
   };
+
+  const handleConnectInstagram = async () => {
+    try {
+      setConnecting(true);
+      const res = await api('/instagram/connect', {
+        method: 'GET'
+      });
+
+      if (res?.authUrl) {
+        const width = 500;
+        const height = 600;
+        const left = (window.innerWidth - width) / 2;
+        const top = (window.innerHeight - height) / 2;
+
+        const popup = window.open(
+          res.authUrl,
+          'instagram_auth',
+          `width=${width},height=${height},left=${left},top=${top}`
+        );
+
+        if (!popup || popup.closed) {
+          throw new Error('Popup was blocked. Please allow popups and try again.');
+        }
+      }
+    } catch (err) {
+      console.error('Connect Instagram error:', err);
+      handleActiveToastChange('Failed to connect Instagram');
+    } finally {
+      setConnecting(false);
+    }
+  };
+
+  // Hàm xử lý khi xác nhận logout
+  const handleConfirmLogout = async () => {
+    try {
+      setLoggingOut(true);
+
+      // Gọi API disconnect
+      await api('/instagram/disconnect', {
+        method: 'POST'
+      });
+
+      // Reset trạng thái
+      setIsUserConnected(false);
+      setIsMediaConnected(false);
+      setUserInfo(null);
+      setMediaInfo(null);
+
+      handleActiveToastChange('Successfully disconnected from Instagram', 'success');
+      closeLogoutModal();
+    } catch (err) {
+      console.error('Disconnect Instagram error:', err);
+      handleActiveToastChange('Failed to disconnect from Instagram', 'error');
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  // Modal xác nhận logout
+  const {modal: logoutModal, openModal: openLogoutModal, closeModal: closeLogoutModal} = useModal({
+    title: 'Disconnect Instagram',
+    content:
+      'Are you sure you want to disconnect your Instagram account? Your feed will no longer display your Instagram posts.',
+    confirmAction: handleConfirmLogout,
+    primaryAction: {
+      content: 'Disconnect',
+      destructive: true,
+      loading: loggingOut,
+      onAction: handleConfirmLogout
+    }
+  });
 
   // Loading skeleton component
   const SkeletonContent = () => {
@@ -145,9 +302,30 @@ export default function Home() {
           <Layout>
             <Layout.Section variant={'oneHalf'}>
               <LegacyCard sectioned>
-                <Button variant="primary" icon={<Icon source={LogoInstagramIcon} />}>
-                  Connect with Instagram
-                </Button>
+                <TextContainer>
+                  <p>Connect your Instagram account to display your posts in your store</p>
+                </TextContainer>
+                <div style={{marginTop: '16px'}}>
+                  <ButtonGroup>
+                    <Button
+                      variant="primary"
+                      loading={connecting}
+                      disabled={isUserConnected}
+                      icon={<Icon source={LogoInstagramIcon} />}
+                      onClick={handleConnectInstagram}
+                    >
+                      {isUserConnected && userInfo
+                        ? `Connected to @${userInfo.username || userInfo}`
+                        : 'Connect with Instagram'}
+                    </Button>
+
+                    {isUserConnected && (
+                      <Button destructive onClick={() => openLogoutModal()} loading={loggingOut}>
+                        Logout
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                </div>
               </LegacyCard>
 
               <LegacyCard sectioned title="FEED CONFIGURATION">
@@ -209,10 +387,10 @@ export default function Home() {
             <Layout.Section>
               <div className="feed-preview">
                 <InstagramFeed
-                  media={dummyMedia}
+                  media={mediaInfo && mediaInfo.mediaList ? mediaInfo.mediaList : []}
                   config={feedConfig}
                   preview={true}
-                  shopifyMode={true}
+                  loading={refreshingData || (!fetchedMediaInfo && isUserConnected)}
                 />
               </div>
             </Layout.Section>
@@ -220,6 +398,7 @@ export default function Home() {
           {toastMarkup}
         </Page>
         {modal}
+        {logoutModal}
       </Frame>
     </div>
   );

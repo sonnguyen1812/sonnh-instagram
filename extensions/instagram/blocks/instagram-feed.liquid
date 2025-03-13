@@ -56,10 +56,10 @@
       {% for item in media_list limit: total_items %}
         {% assign is_first = forloop.first %}
         <div class="instagram-feed__item {% if feed_config.layout == 2 and is_first %}instagram-feed__item--highlight{% endif %}" data-item='{{ item | json }}'>
-          {% if item.type == 'video' %}
+          {% if item.media_type == 'VIDEO' %}
             <div class="instagram-feed__media-wrapper">
               <img
-                src="{{ item.posterUrl }}"
+                src="{{ item.thumbnail_url | default: item.media_url }}"
                 alt="{{ item.caption }}"
                 loading="lazy"
                 width="600"
@@ -67,7 +67,7 @@
                 class="instagram-feed__poster">
               <video
                 class="instagram-feed__video"
-                src="{{ item.videoUrl }}"
+                src="{{ item.media_url }}"
                 muted
                 playsinline
                 loop
@@ -78,7 +78,7 @@
             </div>
           {% else %}
             <img
-              src="{{ item.mediaUrl }}"
+              src="{{ item.media_url }}"
               alt="{{ item.caption }}"
               loading="lazy"
               width="600"
@@ -86,7 +86,7 @@
               class="instagram-feed__image">
           {% endif %}
           <div class="instagram-feed__overlay">
-            <p class="time">{{ item.postDate | date: "%d/%m/%Y" }}</p>
+            <p class="time">{{ item.timestamp | date: "%d/%m/%Y" }}</p>
           </div>
         </div>
       {% endfor %}
@@ -119,7 +119,7 @@
       <div class="instagram-modal__info">
         <div class="instagram-modal__header">
           <i class="fa-brands fa-instagram"></i>
-          <span>Instagram</span>
+          <span id="modal-username"></span>
         </div>
         <p id="modal-caption" class="instagram-modal__caption"></p>
         <div class="instagram-modal__stats">
@@ -130,6 +130,7 @@
             <span></span>
             comments</span>
         </div>
+        <a id="modal-permalink" href="#" target="_blank" class="instagram-modal__permalink">View on Instagram</a>
       </div>
     </div>
   </div>
@@ -146,9 +147,11 @@
       modal: document.getElementById('instagram-modal'),
       modalImage: document.getElementById('modal-image'),
       modalVideo: document.getElementById('modal-video'),
+      modalUsername: document.getElementById('modal-username'),
       modalCaption: document.getElementById('modal-caption'),
       modalLikes: document.getElementById('modal-likes').querySelector('span'),
       modalComments: document.getElementById('modal-comments').querySelector('span'),
+      modalPermalink: document.getElementById('modal-permalink'),
       grid: document.querySelector('.instagram-feed__grid')
     };
 
@@ -162,23 +165,25 @@
     // Modal handlers
     const modalHandlers = {
       open: function(data) {
-        const { type, videoUrl, mediaUrl, caption, likeCount, commentCount } = data;
+        const { media_type, media_url, caption, like_count, comments_count, username, permalink } = data;
         
         elements.modalImage.style.display = 'none';
         elements.modalVideo.style.display = 'none';
         
-        if (type === 'video') {
-          elements.modalVideo.src = videoUrl;
+        if (media_type === 'VIDEO') {
+          elements.modalVideo.src = media_url;
           elements.modalVideo.style.display = 'block';
           elements.modalVideo.play();
         } else {
-          elements.modalImage.src = mediaUrl;
+          elements.modalImage.src = media_url;
           elements.modalImage.style.display = 'block';
         }
         
+        elements.modalUsername.textContent = username;
         elements.modalCaption.textContent = caption;
-        elements.modalLikes.textContent = likeCount.toLocaleString();
-        elements.modalComments.textContent = commentCount.toLocaleString();
+        elements.modalLikes.textContent = like_count.toLocaleString();
+        elements.modalComments.textContent = comments_count.toLocaleString();
+        elements.modalPermalink.href = permalink;
         elements.modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       },
@@ -212,12 +217,12 @@
 
     // Sort functions map
     const sortFunctions = {
-      'date-desc': (a, b) => new Date(b.data.postDate) - new Date(a.data.postDate),
-      'date-asc': (a, b) => new Date(a.data.postDate) - new Date(b.data.postDate),
-      'likes-desc': (a, b) => b.data.likeCount - a.data.likeCount,
-      'likes-asc': (a, b) => a.data.likeCount - b.data.likeCount,
-      'comments-desc': (a, b) => b.data.commentCount - a.data.commentCount,
-      'comments-asc': (a, b) => a.data.commentCount - b.data.commentCount
+      'date-desc': (a, b) => new Date(b.data.timestamp) - new Date(a.data.timestamp),
+      'date-asc': (a, b) => new Date(a.data.timestamp) - new Date(b.data.timestamp),
+      'likes-desc': (a, b) => b.data.like_count - a.data.like_count,
+      'likes-asc': (a, b) => a.data.like_count - b.data.like_count,
+      'comments-desc': (a, b) => b.data.comments_count - a.data.comments_count,
+      'comments-asc': (a, b) => a.data.comments_count - b.data.comments_count
     };
 
     function filterAndSortMedia() {
@@ -227,7 +232,7 @@
 
       const filteredItems = mediaList.filter(item => {
         const caption = item.data.caption?.toLowerCase().trim() || '';
-        const postDate = new Date(item.data.postDate);
+        const postDate = new Date(item.data.timestamp);
         
         return (!searchTerm || caption.includes(searchTerm)) &&
                (!fromDate || postDate >= fromDate) &&

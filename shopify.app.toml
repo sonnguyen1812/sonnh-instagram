@@ -2,7 +2,7 @@
 
 name = "sonnh-instagram-feed"
 client_id = "9c311bf9f43d5cadfed7a2b5775a8464"
-application_url = "https://dame-sandwich-spread-collins.trycloudflare.com/auth/shopify"
+application_url = "https://continually-neon-acting-replace.trycloudflare.com/auth/shopify"
 embedded = true
 
 [access_scopes]
@@ -11,9 +11,9 @@ use_legacy_install_flow = true
 
 [auth]
 redirect_urls = [
-  "https://dame-sandwich-spread-collins.trycloudflare.com/auth/shopify/callback",
-  "https://dame-sandwich-spread-collins.trycloudflare.com/authSa/shopify/callback",
-  "https://dame-sandwich-spread-collins.trycloudflare.com/auth/shopify/embed/callback",
+  "https://continually-neon-acting-replace.trycloudflare.com/auth/shopify/callback",
+  "https://continually-neon-acting-replace.trycloudflare.com/authSa/shopify/callback",
+  "https://continually-neon-acting-replace.trycloudflare.com/auth/shopify/embed/callback",
   "https://localhost:3000/auth/shopify/callback",
   "https://localhost:3000/authSa/shopify/callback",
   "https://localhost:3000/auth/shopify/embed/callback"
@@ -27,4 +27,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "sonnh-instagram-feed-storefront.myshopify.com"
+dev_store_url = "avada-first-app-store.myshopify.com"

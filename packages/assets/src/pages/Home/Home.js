@@ -5,24 +5,18 @@ import {
   Page,
   Layout,
   LegacyCard,
-  FormLayout,
-  TextField,
-  Button,
-  Icon,
   SkeletonBodyText,
   SkeletonDisplayText,
-  TextContainer,
-  ButtonGroup
+  TextContainer
 } from '@shopify/polaris';
 import {LogoInstagramIcon} from '@shopify/polaris-icons';
-import InstagramFeed from '@assets/components/InstagramFeed/InstagramFeed';
-import {dummyMedia} from '@functions/const/dummyMedia';
 import useActiveToast from '@assets/hooks/toast/useActiveToast';
 import useModal from '@assets/hooks/popup/useModal';
 import useGetApi from '@assets/hooks/api/useGetApi';
 import {api} from '@assets/helpers';
-// eslint-disable-next-line no-unused-vars
-import defaultFeedConfig from '@functions/const/defaultFeedConfig';
+import {FeedConfig} from './components/FeedConfig';
+import {InstagramConnect} from './components/InstagramConnect';
+import {Preview} from './components/Preview';
 
 export default function Home() {
   const {toastMarkup, handleActiveToastChange} = useActiveToast(false, '');
@@ -160,7 +154,6 @@ export default function Home() {
   const {modal, openModal, closeModal} = useModal({
     title: 'Save change',
     content: 'Do you want to update your feed settings?',
-    confirmAction: handleSaveFeed,
     primaryAction: {
       content: 'Save',
       loading: loading,
@@ -170,13 +163,10 @@ export default function Home() {
 
   const handleFeedConfigChange = (key, value) => {
     setFetched(false);
-    setFeedConfig(prevConfig => {
-      const newConfig = {
-        ...prevConfig,
-        [key]: value
-      };
-      return newConfig;
-    });
+    setFeedConfig(prevConfig => ({
+      ...prevConfig,
+      [key]: value
+    }));
   };
 
   const handleConnectInstagram = async () => {
@@ -241,7 +231,6 @@ export default function Home() {
     title: 'Disconnect Instagram',
     content:
       'Are you sure you want to disconnect your Instagram account? Your feed will no longer display your Instagram posts.',
-    confirmAction: handleConfirmLogout,
     primaryAction: {
       content: 'Disconnect',
       destructive: true,
@@ -301,98 +290,31 @@ export default function Home() {
         >
           <Layout>
             <Layout.Section variant={'oneHalf'}>
-              <LegacyCard sectioned>
-                <TextContainer>
-                  <p>Connect your Instagram account to display your posts in your store</p>
-                </TextContainer>
-                <div style={{marginTop: '16px'}}>
-                  <ButtonGroup>
-                    <Button
-                      variant="primary"
-                      loading={connecting}
-                      disabled={isUserConnected}
-                      icon={<Icon source={LogoInstagramIcon} />}
-                      onClick={handleConnectInstagram}
-                    >
-                      {isUserConnected && userInfo
-                        ? `Connected to @${userInfo.username || userInfo}`
-                        : 'Connect with Instagram'}
-                    </Button>
+              <InstagramConnect
+                isUserConnected={isUserConnected}
+                connecting={connecting}
+                loggingOut={loggingOut}
+                userInfo={userInfo}
+                onConnect={handleConnectInstagram}
+                onLogout={openLogoutModal}
+              />
 
-                    {isUserConnected && (
-                      <Button destructive onClick={() => openLogoutModal()} loading={loggingOut}>
-                        Logout
-                      </Button>
-                    )}
-                  </ButtonGroup>
-                </div>
-              </LegacyCard>
-
-              <LegacyCard sectioned title="FEED CONFIGURATION">
-                <FormLayout>
-                  <TextField
-                    label="Feed Title"
-                    value={feedConfig.title}
-                    onChange={value => handleFeedConfigChange('title', value)}
-                  />
-                  <TextField
-                    label="Post Spacing"
-                    type="number"
-                    value={feedConfig.spacing}
-                    onChange={value =>
-                      handleFeedConfigChange('spacing', Math.min(Math.max(Number(value), 1), 15))
-                    }
-                    min={1}
-                    max={15}
-                  />
-                  <TextField
-                    label="Layout (1: Grid, 2: Highlight)"
-                    type="number"
-                    value={feedConfig.layout}
-                    onChange={value =>
-                      handleFeedConfigChange('layout', Math.min(Math.max(Number(value), 1), 2))
-                    }
-                    min={1}
-                    max={2}
-                  />
-                  <FormLayout.Group>
-                    <TextField
-                      label="Number of Rows"
-                      type="number"
-                      value={feedConfig.rows}
-                      onChange={value =>
-                        handleFeedConfigChange('rows', Math.min(Math.max(Number(value), 1), 12))
-                      }
-                      min={1}
-                      max={12}
-                    />
-                    <TextField
-                      label="Number of Columns"
-                      type="number"
-                      value={feedConfig.columns}
-                      onChange={value =>
-                        handleFeedConfigChange('columns', Math.min(Math.max(Number(value), 1), 3))
-                      }
-                      min={1}
-                      max={3}
-                    />
-                  </FormLayout.Group>
-                  <Button fullWidth variant="primary" loading={loading} onClick={() => openModal()}>
-                    Save Feed
-                  </Button>
-                </FormLayout>
-              </LegacyCard>
+              <FeedConfig
+                feedConfig={feedConfig}
+                loading={loading}
+                onConfigChange={handleFeedConfigChange}
+                onSave={openModal}
+              />
             </Layout.Section>
 
             <Layout.Section>
-              <div className="feed-preview">
-                <InstagramFeed
-                  media={mediaInfo && mediaInfo.mediaList ? mediaInfo.mediaList : []}
-                  config={feedConfig}
-                  preview={true}
-                  loading={refreshingData || (!fetchedMediaInfo && isUserConnected)}
-                />
-              </div>
+              <Preview
+                mediaInfo={mediaInfo}
+                feedConfig={feedConfig}
+                loading={refreshingData}
+                fetchedMediaInfo={fetchedMediaInfo}
+                isUserConnected={isUserConnected}
+              />
             </Layout.Section>
           </Layout>
           {toastMarkup}
